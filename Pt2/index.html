@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Tag Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #87CEEB, #98FB98);
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        h1 {
+            color: #2F4F2F;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+        
+        .game-container {
+            border: 3px solid #654321;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            background: #228B22;
+        }
+        
+        canvas {
+            display: block;
+            background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 100%);
+        }
+        
+        .controls {
+            margin-top: 20px;
+            background: rgba(255,255,255,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .player-controls {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .player {
+            text-align: center;
+        }
+        
+        .player h3 {
+            margin: 0 0 10px 0;
+            color: #2F4F2F;
+        }
+        
+        .controls-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .controls-list li {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .player-a { color: #FF6B6B; }
+        .player-b { color: #4ECDC4; }
+        
+        .game-status {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #2F4F2F;
+        }
+        
+        .timer-info {
+            background: #FFE4B5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 2px solid #DAA520;
+        }
+        
+        .portal-info {
+            background: #E6E6FA;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 2px solid #8A2BE2;
+        }
+        
+        .bouncer-info {
+            background: #FFFACD;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            border: 2px solid #FFD700;
+        }
+        
+        .readme-section {
+            margin-top: 30px;
+            background: rgba(255,255,255,0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        .readme-section h2 {
+            color: #2F4F2F;
+            border-bottom: 2px solid #228B22;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .readme-section h3 {
+            color: #2F4F2F;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .readme-section ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .readme-section li {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+        
+        .readme-section strong {
+            color: #2F4F2F;
+        }
+        
+        .readme-section .emoji {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌲 Forest Tag Game 🌲</h1>
+    
+    <div class="timer-info">
+        <strong>⏰ 3-Minute Timer!</strong><br>
+        Whoever is "IT" when time runs out loses!
+    </div>
+    
+    <div class="portal-info">
+        <strong>🌀 Purple Portals!</strong><br>
+        Touch a portal to teleport to the other one! Portals move after each use.
+    </div>
+    
+    <div class="bouncer-info">
+        <strong>🟡 Yellow Bouncers!</strong><br>
+        Jump on bouncers to launch high into the air! Great for escaping or reaching platforms.
+    </div>
+    
+    <div class="game-container">
+        <canvas id="gameCanvas" width="1200" height="600"></canvas>
+    </div>
+    
+    <div class="controls">
+        <div class="player-controls">
+            <div class="player">
+                <h3 class="player-a">Character A (Red Bandana)</h3>
+                <ul class="controls-list">
+                    <li><strong>W</strong> - Jump</li>
+                    <li><strong>A</strong> - Move Left</li>
+                    <li><strong>D</strong> - Move Right</li>
+                    <li><strong>S</strong> - Roll (100px dash)</li>
+                </ul>
+            </div>
+            
+            <div class="player">
+                <h3 class="player-b">Character B (Blue Bandana)</h3>
+                <ul class="controls-list">
+                    <li><strong>↑</strong> - Jump</li>
+                    <li><strong>←</strong> - Move Left</li>
+                    <li><strong>→</strong> - Move Right</li>
+                    <li><strong>↓</strong> - Roll (100px dash)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="game-status">
+            <p>🏃‍♂️ Avoid being "IT" when the timer ends! Use bouncers, portals, platforms and obstacles strategically.</p>
+            <p><strong>U</strong> - Restart Game</p>
+        </div>
+    </div>
+
+    <div class="readme-section">
+        <h2>🌲 Forest Tag Game - Complete Guide</h2>
+        
+        <p>A fun 2-player tag game set in a beautiful forest environment with platforms, obstacles, portals, and strategic gameplay!</p>
+        
+        <h3>🎮 How to Play</h3>
+        
+        <h4>Objective</h4>
+        <p><strong>Avoid being "IT" when the 3-minute timer ends!</strong> The player who is tagged when time runs out loses the game.</p>
+        
+        <h4>Game Rules</h4>
+        <ul>
+            <li>The game lasts exactly <strong>3 minutes (180 seconds)</strong></li>
+            <li>Players can tag each other to transfer the "IT" status</li>
+            <li>Whoever is "IT" when the timer reaches 0 loses</li>
+            <li>If no one is "IT" when time runs out, it's a tie</li>
+        </ul>
+        
+        <h3>🎯 Controls</h3>
+        
+        <h4>Character A (Red Bandana)</h4>
+        <ul>
+            <li><strong>W</strong> - Jump</li>
+            <li><strong>A</strong> - Move Left</li>
+            <li><strong>D</strong> - Move Right</li>
+            <li><strong>S</strong> - Roll (100px dash)</li>
+        </ul>
+        
+        <h4>Character B (Blue Bandana)</h4>
+        <ul>
+            <li><strong>↑</strong> - Jump</li>
+            <li><strong>←</strong> - Move Left</li>
+            <li><strong>→</strong> - Move Right</li>
+            <li><strong>↓</strong> - Roll (100px dash)</li>
+        </ul>
+        
+        <h4>Game Controls</h4>
+        <ul>
+            <li><strong>U</strong> - Restart Game</li>
+        </ul>
+        
+        <h3>🌳 Game Features</h3>
+        
+        <h4>Forest Environment</h4>
+        <ul>
+            <li>Beautiful sky gradient with floating clouds</li>
+            <li>Multiple platforms at different heights for strategic movement</li>
+            <li>Trees and rocks as obstacles</li>
+            <li>Grassy ground with natural textures</li>
+        </ul>
+        
+        <h4>Gameplay Mechanics</h4>
+        <ul>
+            <li><strong>3-minute countdown timer</strong> displayed at the top</li>
+            <li><strong>Physics-based movement</strong> with gravity and momentum</li>
+            <li><strong>Platform jumping</strong> - use platforms to reach higher areas</li>
+            <li><strong>Rolling ability</strong> - press roll to dash 100 pixels forward</li>
+            <li><strong>Collision detection</strong> - obstacles block movement</li>
+            <li><strong>Tag system</strong> - get close to your opponent to transfer "IT" status</li>
+            <li><strong>Cooldown system</strong> - prevents spam tagging</li>
+            <li><strong>Timer-based win condition</strong> - avoid being "IT" when time runs out</li>
+        </ul>
+        
+        <h4>Special Features</h4>
+        <ul>
+            <li><strong>🟡 Yellow Bouncers</strong> - Jump on them to launch high into the air</li>
+            <li><strong>🌀 Purple Portals</strong> - Touch to teleport to the other portal</li>
+            <li><strong>Character Bandanas</strong> - Red and blue bandanas for easy identification</li>
+            <li><strong>Bounce Physics</strong> - Characters bounce apart when touching</li>
+        </ul>
+        
+        <h4>Visual Features</h4>
+        <ul>
+            <li>Animated characters with facial features and bandanas</li>
+            <li>"IT" players turn gray and show "IT!" indicator</li>
+            <li>Real-time timer display that turns red in the last 10 seconds</li>
+            <li>Player status UI showing who is currently "IT"</li>
+            <li>Smooth 60fps gameplay</li>
+            <li>Forest-themed visual design</li>
+        </ul>
+        
+        <h3>🚀 Getting Started</h3>
+        <ol>
+            <li>Open the game in your web browser</li>
+            <li>The game will start automatically with a 3-minute timer</li>
+            <li>Use the controls to move your character</li>
+            <li>Try to avoid being "IT" when the timer ends!</li>
+        </ol>
+        
+        <h3>🎯 Strategy Tips</h3>
+        <ul>
+            <li>Use platforms to gain height advantage and escape</li>
+            <li>Time your rolls for quick escapes or pursuits</li>
+            <li>Use obstacles to block your opponent's path</li>
+            <li>Jump between platforms to create distance</li>
+            <li>Watch the timer - the last 10 seconds are critical!</li>
+            <li>If you're "IT", be aggressive to tag your opponent</li>
+            <li>If you're safe, use defensive positioning</li>
+            <li>Use bouncers to reach high platforms or escape quickly</li>
+            <li>Portals can be used for surprise attacks or escapes</li>
+        </ul>
+        
+        <h3>⏰ Timer Mechanics</h3>
+        <ul>
+            <li><strong>180 seconds</strong> total game time</li>
+            <li>Timer counts down in real-time</li>
+            <li>Display shows minutes:seconds format</li>
+            <li>Timer turns <strong>red</strong> in the last 10 seconds</li>
+            <li>Game ends immediately when timer reaches 0:00</li>
+            <li>Whoever is "IT" at that moment loses</li>
+        </ul>
+        
+        <h3>🔧 Technical Details</h3>
+        <ul>
+            <li>Built with HTML5 Canvas and vanilla JavaScript</li>
+            <li>Responsive design that works on different screen sizes</li>
+            <li>No external dependencies required</li>
+            <li>Smooth physics and collision detection</li>
+            <li>Optimized game loop for consistent performance</li>
+            <li>Real-time timer synchronization</li>
+        </ul>
+        
+        <p style="text-align: center; margin-top: 30px; font-size: 18px; color: #2F4F2F;">
+            <strong>Enjoy the game! 🌲🏃‍♂️🏃‍♀️⏰</strong>
+        </p>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html> 
